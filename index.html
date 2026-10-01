@@ -6,27 +6,56 @@
 <title>Phenta — Videojuegos inspirados en la literatura clásica</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Great+Vibes&family=Cinzel:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Great+Vibes&family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#06020f;
-    --bg-2:#0f0520;
-    --panel:rgba(21, 9, 42, 0.65);
-    --panel-hover:rgba(30, 14, 58, 0.85);
-    --border:rgba(230, 211, 154, 0.15);
-    --border-hover:rgba(230, 211, 154, 0.4);
-    --primary:#9a58f7;
+    /* Colores por defecto (Morado / Lila) */
+    --bg-dark:#0a0318;
+    --bg-glow-1: rgba(95, 40, 180, 0.28);
+    --bg-glow-2: rgba(130, 60, 220, 0.22);
+    --bg-glow-3: rgba(70, 20, 140, 0.3);
+    
+    --nav-bg: rgba(10, 3, 24, 0.75);
+    --panel-glass: rgba(35, 16, 68, 0.45);
+    --panel-glass-hover: rgba(52, 24, 102, 0.65);
+    --border-gold: rgba(230, 211, 154, 0.25);
+    --border-gold-hover: rgba(230, 211, 154, 0.6);
     --primary-glow:#c79bff;
     --text:#f4eefb;
-    --muted:#b7a8cf;
-    --champagne-light:#f3e7c4;
+    --muted:#c4b5de;
+    --nav-active-glow: rgba(230,211,154,0.8);
+    --nav-line-bg: var(--champagne);
+    --title-gradient: linear-gradient(180deg, #ffffff, #e2d4f7);
+    --champagne-light:#f9f0d9;
     --champagne:#e6d39a;
     --champagne-dark:#cbb279;
-    --shadow:0 15px 35px -10px rgba(0,0,0,0.5);
-    --gold-glow:0 0 20px rgba(230,211,154,0.15);
   }
+
+  /* ESTADO AZUL COMPLETO (CON BARRA SUPERIOR MÁS INTENSA) */
+  body.theme-blue #app {
+    --bg-dark:#020614;
+    --bg-glow-1: rgba(20, 80, 180, 0.35);
+    --bg-glow-2: rgba(30, 130, 230, 0.25);
+    --bg-glow-3: rgba(10, 50, 130, 0.4);
+    
+    /* Azul más marcado y profundo para la barra superior */
+    --nav-bg: rgba(4, 18, 54, 0.92);
+    --panel-glass: rgba(12, 32, 70, 0.5);
+    --panel-glass-hover: rgba(20, 50, 105, 0.7);
+    
+    --border-gold: rgba(114, 192, 255, 0.45);
+    --border-gold-hover: rgba(140, 210, 255, 0.8);
+    --text:#f0f6ff;
+    --muted:#9bb8e5;
+    
+    --nav-line-bg: #72c0ff;
+    --nav-active-glow: rgba(114, 192, 255, 0.9);
+    --title-gradient: linear-gradient(180deg, #ffffff, #a3d5ff);
+    --primary-glow:#72c0ff;
+  }
+
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  html,body{background:#0a0318;color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden}
   a{color:inherit;text-decoration:none}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 
@@ -41,21 +70,15 @@
     opacity: 1;
     transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  #landing.fade-out {
-    opacity: 0;
-    pointer-events: none;
-  }
+  #landing.fade-out { opacity: 0; pointer-events: none; }
   #landing::before{
     content:"";position:absolute;inset:24px;border:1px solid rgba(230,211,154,0.15);border-radius:18px;pointer-events:none;
   }
   .stars{position:absolute;inset:0;pointer-events:none;opacity:0.6}
   .stars span{position:absolute;background:#fff;border-radius:50%}
-  
-  /* Brillitos dorados en el landing */
   .gold-sparks{position:absolute;inset:0;pointer-events:none;overflow:hidden}
   .gold-spark{
-    position:absolute;
-    border-radius:50%;
+    position:absolute;border-radius:50%;
     background:radial-gradient(circle, rgba(243,231,196,0.9) 0%, rgba(230,211,154,0) 70%);
     animation:goldShine linear infinite;
   }
@@ -64,22 +87,11 @@
     50% { opacity: 0.85; transform: translateY(-30px) scale(1.2); }
     100% { transform: translateY(-60px) scale(0.5); opacity: 0; }
   }
-
   .landing-inner{position:relative;z-index:2;text-align:center;max-width:760px}
-  
-  /* Estrella principal */
-  .star-emblem-wrapper{
-    width:110px;height:110px;margin:0 auto 12px;
-    filter:drop-shadow(0 0 18px rgba(230,211,154,0.35));
-  }
-  .star-emblem-wrapper svg{
-    width:100%;height:100%;
-  }
-
+  .star-emblem-wrapper{width:110px;height:110px;margin:0 auto 12px;filter:drop-shadow(0 0 18px rgba(230,211,154,0.35))}
+  .star-emblem-wrapper svg{width:100%;height:100%}
   .brand{
-    font-family:'Alex Brush', cursive;
-    font-size:clamp(50px, 9.5vw, 95px);
-    line-height:1;
+    font-family:'Alex Brush', cursive;font-size:clamp(50px, 9.5vw, 95px);line-height:1;
     background:linear-gradient(180deg, var(--champagne-light), var(--champagne), var(--champagne-dark));
     -webkit-background-clip:text;background-clip:text;color:transparent;
     filter:drop-shadow(0 6px 24px rgba(214,180,110,0.25));
@@ -98,195 +110,260 @@
     transition:all .3s ease;
   }
   .enter-btn:hover{
-    background:rgba(230,211,154,0.18);
-    border-color:var(--champagne);
-    box-shadow:0 10px 30px -10px rgba(230,211,154,0.3);
-    transform:translateY(-2px);
+    background:rgba(230,211,154,0.18);border-color:var(--champagne);
+    box-shadow:0 10px 30px -10px rgba(230,211,154,0.3);transform:translateY(-2px);
   }
 
-  /* ============ APP (INTERIOR REDISEÑADO) ============ */
+  /* ============ APP INTERIOR ============ */
   #app{
-    display:none;
-    min-height:100vh;
-    opacity:0;
-    transition: opacity 0.8s ease;
+    display:none;min-height:100vh;opacity:0;
+    transition: opacity 0.8s ease, background 0.8s ease;
     background:
-      radial-gradient(ellipse at 50% 0%, rgba(65, 25, 110, 0.25), transparent 70%),
-      radial-gradient(ellipse at 80% 80%, rgba(45, 15, 80, 0.2), transparent 70%),
-      var(--bg);
+      radial-gradient(circle at 15% 20%, var(--bg-glow-1), transparent 45%),
+      radial-gradient(circle at 85% 60%, var(--bg-glow-2), transparent 50%),
+      radial-gradient(circle at 50% 90%, var(--bg-glow-3), transparent 60%),
+      linear-gradient(180deg, var(--bg-dark) 0%, #010005 100%);
+    background-attachment: fixed;
+    position: relative;
+    overflow: hidden;
   }
-  #app.show{
-    display:block;
+  #app.show{ display:block; }
+  #app.fade-in{ opacity:1; }
+
+  /* Partículas que siguen al cursor */
+  .cursor-spark{
+    position:fixed;
+    pointer-events:none;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(243,231,196,0.9) 0%, rgba(230,211,154,0) 70%);
+    transform:translate(-50%, -50%);
+    z-index:99;
+    animation:cursorFade 0.7s forwards ease-out;
   }
-  #app.fade-in{
-    opacity:1;
+  @keyframes cursorFade{
+    0% { transform:translate(-50%, -50%) scale(1); opacity:1; }
+    100% { transform:translate(-50%, -30px) scale(0.2); opacity:0; }
   }
+
+  /* BARRA SUPERIOR DINÁMICA */
   header.nav{
     position:sticky;top:0;z-index:40;
-    background:rgba(6,2,15,0.75);backdrop-filter:blur(18px);
-    border-bottom:1px solid var(--border);
+    background: var(--nav-bg);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid var(--border-gold);
+    transition: background 0.8s ease, border-color 0.8s ease;
   }
+
   .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 24px}
   
+  /* Logo Phenta con la Estrella Dorada de 5 Puntas y Órbita */
   .logo{
     display:flex;align-items:center;gap:10px;
-    font-family:'Great Vibes',cursive;font-size:30px;
+    font-family:'Great Vibes',cursive;font-size:32px;
     background:linear-gradient(180deg, var(--champagne-light), var(--champagne));
     -webkit-background-clip:text;background-clip:text;color:transparent;
-    cursor:pointer;user-select:none;transition:transform 0.2s ease, filter 0.2s ease;
+    cursor:pointer;user-select:none;transition:all 0.3s ease;
   }
-  .logo:hover{
-    transform:scale(1.02);
-    filter:drop-shadow(0 0 10px rgba(230,211,154,0.4));
-  }
-  .logo svg{width:22px;height:22px;fill:var(--champagne)}
-  
+  .logo:hover{transform:scale(1.03);filter:drop-shadow(0 0 12px rgba(230,211,154,0.6))}
+  .logo-star-icon{width:32px;height:32px;display:inline-block;filter:drop-shadow(0 0 8px rgba(230,211,154,0.4))}
+  .logo-star-icon svg{width:100%;height:100%}
+
   nav.links{display:flex;gap:8px;flex-wrap:wrap}
   nav.links button{
     padding:8px 16px;border-radius:8px;font-size:14px;color:var(--muted);
     transition:all 0.3s ease;position:relative;font-weight:500;
   }
-  nav.links button:hover{color:var(--champagne-light)}
-  nav.links button.active{color:var(--champagne-light)}
+  nav.links button:hover, nav.links button.active{color:var(--champagne-light)}
   nav.links button.active::after{
     content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:2px;
-    background:linear-gradient(90deg,transparent,var(--champagne),transparent);
-    box-shadow:0 0 8px var(--champagne);
-  }
-  
-  main{max-width:1200px;margin:0 auto;padding:64px 24px}
-  
-  section{
-    display:none;
-    opacity:0;
-    transform:translateY(12px);
-    transition:opacity 0.4s ease, transform 0.4s ease;
-  }
-  section.active{
-    display:block;
-    opacity:1;
-    transform:translateY(0);
+    background:linear-gradient(90deg,transparent, var(--nav-line-bg), transparent);
+    box-shadow:0 0 10px var(--nav-active-glow);
+    transition: background 0.8s ease, box-shadow 0.8s ease;
   }
 
-  .kicker{font-family:'Cinzel',serif;letter-spacing:0.35em;font-size:11px;color:var(--champagne);text-transform:uppercase;margin-bottom:8px;opacity:0.9}
+  main{max-width:1200px;margin:0 auto;padding:48px 24px 80px;position:relative;z-index:2;}
+  section{display:none;opacity:0;transform:translateY(12px);transition:opacity 0.4s ease, transform 0.4s ease}
+  section.active{display:block;opacity:1;transform:translateY(0)}
+
+  .kicker{font-family:'Cinzel',serif;letter-spacing:0.35em;font-size:11px;color:var(--champagne);text-transform:uppercase;margin-bottom:8px}
+  
   h2.title{
-    font-family:'Cinzel',serif;font-size:clamp(32px,4.5vw,52px);font-weight:600;letter-spacing:-0.01em;
-    background:linear-gradient(180deg, #fff, #dcd0f0);
+    font-family:'Cinzel',serif;font-size:clamp(32px,4.5vw,48px);font-weight:600;letter-spacing:-0.01em;
+    background:var(--title-gradient);
     -webkit-background-clip:text;background-clip:text;color:transparent;
+    transition: background 0.8s ease, color 0.8s ease;
   }
-  .lede{margin-top:12px;color:var(--muted);font-size:16px;max-width:640px;line-height:1.6}
+  .lede{margin-top:8px;color:var(--muted);font-size:16px;max-width:640px;line-height:1.6;transition: color 0.8s ease;}
 
-  .grid{display:grid;gap:24px;margin-top:40px}
-  .grid.cols-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-  .grid.cols-3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-
-  /* Tarjetas con estilo Cristalino (Glassmorphism) */
-  .card{
-    background:var(--panel);
+  /* BANNER HERO INTERACTIVO CON ZOOM Y BRILLO */
+  .hero-banner{
+    margin-top:28px;position:relative;border-radius:20px;overflow:hidden;
+    border:1px solid var(--border-gold);
+    background:linear-gradient(135deg, rgba(60, 25, 110, 0.6), rgba(20, 8, 40, 0.8));
     backdrop-filter:blur(12px);
-    border:1px solid var(--border);
-    border-radius:16px;padding:30px;
-    transition:all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    display:grid;grid-template-columns: 1.2fr 1fr;align-items:center;padding:40px;gap:30px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.4);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+  }
+  
+  .hero-banner:hover {
+    transform: translateY(-6px) scale(1.01);
+    border-color: rgba(140, 210, 255, 0.85);
+    box-shadow: 0 20px 60px rgba(25, 110, 240, 0.5), 0 0 30px rgba(100, 180, 255, 0.35);
+    background: linear-gradient(135deg, rgba(20, 60, 130, 0.7), rgba(8, 25, 60, 0.9));
+  }
+  
+  @media(max-width:850px){ .hero-banner{grid-template-columns:1fr;padding:28px;} }
+
+  .hero-tag{
+    display:inline-block;padding:4px 12px;border-radius:999px;
+    background:rgba(230,211,154,0.15);border:1px solid var(--border-gold);
+    font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.2em;color:var(--champagne-light);margin-bottom:14px;
+    transition: border-color 0.8s ease;
+  }
+  .hero-banner h3{
+    font-family:'Cinzel',serif;font-size:clamp(24px,3vw,36px);margin-bottom:12px;line-height:1.2;
+    background: var(--title-gradient);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    transition: background 0.8s ease;
+  }
+  .hero-banner p{color:var(--muted);font-size:15px;line-height:1.6;margin-bottom:24px;transition: color 0.8s ease;}
+  
+  .btn-primary{
+    display:inline-flex;align-items:center;gap:10px;padding:12px 28px;border-radius:999px;
+    background:linear-gradient(135deg, var(--champagne), var(--champagne-dark));
+    color:#0e0524;font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:0.15em;
+    transition:all 0.3s ease;box-shadow:0 4px 20px rgba(230,211,154,0.3);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(230,211,154,0.5);color:#000}
+  
+  .hero-image-preview{
+    width:100%;aspect-ratio:16/10;border-radius:14px;overflow:hidden;
+    border:1px solid var(--border-gold);position:relative;
+    background:#150830 url('descensus-hero.jpg') center/cover no-repeat;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.5s ease, border-color 0.8s ease;
+  }
+  .hero-banner:hover .hero-image-preview {
+    transform: scale(1.03);
+  }
+  .hero-image-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(10,3,24,0.8))}
+
+  /* GRIDS & TARJETAS GLASSMORPHISM */
+  .grid{display:grid;gap:24px;margin-top:36px}
+  .grid.cols-2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+  .grid.cols-3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+
+  .card{
+    background:var(--panel-glass);
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--border-gold);
+    border-radius:18px;padding:32px;
+    transition:all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     position:relative;overflow:hidden;
-    text-align:left;width:100%;
-    display:flex;flex-direction:column;
+    text-align:left;width:100%;display:flex;flex-direction:column;
   }
   .card::before{
     content:"";position:absolute;inset:0;
-    background:radial-gradient(circle at top left, rgba(230,211,154,0.08), transparent 60%);
-    pointer-events:none;opacity:0;transition:opacity 0.35s ease;
+    background:radial-gradient(circle at top left, rgba(230,211,154,0.12), transparent 65%);
+    pointer-events:none;opacity:0;transition:opacity 0.4s ease;
   }
   .card:hover{
-    background:var(--panel-hover);
-    border-color:var(--border-hover);
-    transform:translateY(-4px);
-    box-shadow:var(--shadow), var(--gold-glow);
+    background:var(--panel-glass-hover);
+    border-color:var(--border-gold-hover);
+    transform:translateY(-5px);
+    box-shadow:0 20px 40px -10px rgba(0,0,0,0.5), 0 0 25px rgba(230,211,154,0.15);
   }
   .card:hover::before{opacity:1}
 
-  /* Iconos limpios e integrados */
+  /* ICONOS LUMINOSOS */
   .card .icon{
-    width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-    background:rgba(230,211,154,0.06);border:1px solid rgba(230,211,154,0.15);
-    color:var(--champagne-light);margin-bottom:20px;
+    width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    background:rgba(230,211,154,0.08);border:1px solid rgba(230,211,154,0.2);
+    color:var(--champagne-light);margin-bottom:22px;
     transition:all 0.3s ease;
   }
   .card:hover .icon{
-    background:rgba(230,211,154,0.15);
-    border-color:var(--champagne);
-    color:#fff;
-    transform:scale(1.05);
-    box-shadow:0 0 15px rgba(230,211,154,0.25);
+    background:rgba(230,211,154,0.2);border-color:var(--champagne);
+    color:#fff;transform:scale(1.08) rotate(-3deg);
+    box-shadow:0 0 20px rgba(230,211,154,0.35);
   }
-  .card .icon svg{width:22px;height:22px;fill:currentColor}
+  .card .icon svg{width:24px;height:24px;fill:currentColor}
 
-  .card h3{font-family:'Cinzel',serif;font-size:19px;font-weight:600;margin-bottom:10px;color:var(--champagne-light)}
-  .card p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px;flex-grow:1}
-  
+  .card h3{font-family:'Cinzel',serif;font-size:20px;font-weight:600;margin-bottom:10px;color:var(--champagne-light)}
+  .card p{color:var(--muted);font-size:14px;line-height:1.65;margin-bottom:24px;flex-grow:1;transition: color 0.8s ease;}
+
   .card .action{
     color:var(--champagne);font-size:13px;font-family:'Cinzel',serif;
-    letter-spacing:0.1em;font-weight:600;display:inline-flex;align-items:center;gap:6px;
+    letter-spacing:0.12em;font-weight:600;display:inline-flex;align-items:center;gap:6px;
     transition:all 0.3s ease;
   }
-  .card:hover .action{gap:10px;color:#fff}
+  .card:hover .action{gap:12px;color:#fff}
 
   .locked{
     display:inline-flex;align-items:center;gap:6px;padding:6px 14px;
-    border:1px solid rgba(255,255,255,0.1);background:rgba(0,0,0,0.2);
+    border:1px solid rgba(255,255,255,0.12);background:rgba(0,0,0,0.25);
     border-radius:999px;font-size:12px;color:var(--muted);
   }
   .locked svg{width:13px;height:13px;fill:currentColor}
 
-  /* Descensus featured card */
-  .card-descensus{padding:0;display:flex;flex-direction:column;overflow:hidden}
-  .card-descensus .card-image{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#080214}
+  /* TARJETA DESCENSUS SECUNDARIO */
+  .card-descensus{padding:0;overflow:hidden;transition: all 0.4s ease;}
+  .card-descensus:hover{
+    transform: translateY(-5px) scale(1.01);
+    border-color: rgba(140, 210, 255, 0.8);
+    box-shadow: 0 20px 50px rgba(30, 100, 220, 0.35), 0 0 25px rgba(100, 180, 255, 0.25);
+  }
+  .card-descensus .card-image{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#0e0524}
   .card-descensus .card-image img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease}
-  .card-descensus:hover .card-image img{transform:scale(1.04)}
-  .card-descensus .card-image-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(6,2,15,0.95) 100%);pointer-events:none}
-  .card-descensus .card-body{padding:28px}
+  .card-descensus:hover .card-image img{transform:scale(1.05)}
+  .card-descensus .card-image-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 20%,rgba(14,5,36,0.95) 100%)}
+  .card-descensus .card-body{padding:28px 32px 32px}
 
   .pillars{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-  
   .values{
-    margin-top:32px;padding:32px;border:1px solid var(--border);border-radius:16px;
-    background:var(--panel);backdrop-filter:blur(12px);
+    margin-top:36px;padding:32px;border:1px solid var(--border-gold);border-radius:18px;
+    background:var(--panel-glass);backdrop-filter:blur(16px);
+    transition: border-color 0.8s ease;
   }
   .values h3{font-family:'Cinzel',serif;font-size:20px;margin-bottom:18px;color:var(--champagne-light)}
   .tags{display:flex;flex-wrap:wrap;gap:10px}
   .tag{
-    padding:8px 16px;border:1px solid rgba(230,211,154,0.2);
-    background:rgba(230,211,154,0.05);color:var(--champagne-light);
-    border-radius:999px;font-size:13px;transition:0.3s;
+    padding:8px 18px;border:1px solid rgba(230,211,154,0.25);
+    background:rgba(230,211,154,0.06);color:var(--champagne-light);
+    border-radius:999px;font-size:13px;transition:0.3s ease;
   }
-  .tag:hover{background:rgba(230,211,154,0.15);border-color:var(--champagne)}
+  .tag:hover{background:rgba(230,211,154,0.18);border-color:var(--champagne);transform:translateY(-2px)}
 
   .team{margin-top:48px}
   .team h3{font-family:'Cinzel',serif;font-size:22px;margin-bottom:24px;display:flex;align-items:center;gap:12px;color:var(--champagne-light)}
   .team h3 svg{width:22px;height:22px;fill:var(--champagne)}
   .team-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
   .team-card{
-    padding:22px;border:1px solid var(--border);border-radius:14px;
-    background:var(--panel);backdrop-filter:blur(12px);
+    padding:24px;border:1px solid var(--border-gold);border-radius:16px;
+    background:var(--panel-glass);backdrop-filter:blur(16px);
+    transition: border-color 0.8s ease;
   }
   .team-card .rol{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.25em;color:var(--champagne);text-transform:uppercase}
-  .team-card .nombres{margin-top:10px;font-size:14px;color:var(--text);line-height:1.5}
-  .quote{margin-top:40px;text-align:center;font-family:'Great Vibes',cursive;font-size:32px;color:var(--champagne)}
+  .team-card .nombres{margin-top:10px;font-size:14px;color:var(--text);line-height:1.6;transition: color 0.8s ease;}
+  .quote{margin-top:48px;text-align:center;font-family:'Great Vibes',cursive;font-size:34px;color:var(--champagne)}
 
   .contact{
     display:inline-flex;align-items:center;gap:20px;padding:24px 32px;
-    border:1px solid var(--border);border-radius:16px;background:var(--panel);
-    backdrop-filter:blur(12px);transition:.3s;
+    border:1px solid var(--border-gold);border-radius:18px;background:var(--panel-glass);
+    backdrop-filter:blur(16px);transition:.3s ease;
   }
-  .contact:hover{border-color:var(--border-hover);box-shadow:var(--gold-glow);transform:translateY(-2px)}
+  .contact:hover{border-color:var(--border-gold-hover);box-shadow:0 10px 30px rgba(154,88,247,0.2);transform:translateY(-3px)}
   .contact .icon{
-    width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-    background:rgba(230,211,154,0.08);border:1px solid rgba(230,211,154,0.2);color:var(--champagne);
+    width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    background:rgba(230,211,154,0.1);border:1px solid rgba(230,211,154,0.25);color:var(--champagne);
   }
   .contact .icon svg{width:22px;height:22px;fill:currentColor}
   .contact .label{font-size:11px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase}
   .contact .email{font-family:'Cinzel',serif;font-size:17px;margin-top:4px;color:var(--champagne-light)}
 
-  footer{border-top:1px solid var(--border);margin-top:80px;background:rgba(4, 1, 10, 0.6)}
+  footer{border-top:1px solid var(--border-gold);margin-top:80px;background:rgba(6, 2, 15, 0.8);transition: border-color 0.8s ease;}
   .foot-inner{max-width:1200px;margin:0 auto;padding:32px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:13px}
 
   @media (max-width:640px){
@@ -305,8 +382,6 @@
   <div class="stars" id="stars"></div>
   <div class="gold-sparks" id="goldSparks"></div>
   <div class="landing-inner">
-    
-    <!-- SVG de la Estrella -->
     <div class="star-emblem-wrapper">
       <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -316,17 +391,12 @@
             <stop offset="100%" stop-color="#cbb279"/>
           </linearGradient>
         </defs>
-
         <path d="M130 18 L133 30 L145 33 L133 36 L130 48 L127 36 L115 33 L127 30 Z" fill="url(#champagneGrad)"/>
         <path d="M152 42 L154 50 L162 52 L154 54 L152 62 L150 54 L142 52 L150 50 Z" fill="url(#champagneGrad)"/>
         <path d="M68 128 L70 136 L78 138 L70 140 L68 148 L66 140 L58 138 L66 136 Z" fill="url(#champagneGrad)"/>
         <path d="M112 152 L114 160 L122 162 L114 164 L112 172 L110 164 L102 162 L110 160 Z" fill="url(#champagneGrad)"/>
-
-        <path d="M100 12 L119 68 L176 68 L130 102 L148 158 L100 123 L52 158 L70 102 L24 68 L81 68 Z" 
-              fill="none" stroke="url(#champagneGrad)" stroke-width="12" stroke-linejoin="round"/>
-
-        <path d="M38 120 C 18 160, 110 178, 162 122 C 180 102, 168 76, 148 76" 
-              fill="none" stroke="url(#champagneGrad)" stroke-width="10" stroke-linecap="round"/>
+        <path d="M100 12 L119 68 L176 68 L130 102 L148 158 L100 123 L52 158 L70 102 L24 68 L81 68 Z" fill="none" stroke="url(#champagneGrad)" stroke-width="12" stroke-linejoin="round"/>
+        <path d="M38 120 C 18 160, 110 178, 162 122 C 180 102, 168 76, 148 76" fill="none" stroke="url(#champagneGrad)" stroke-width="10" stroke-linecap="round"/>
       </svg>
     </div>
 
@@ -344,10 +414,30 @@
 
 <!-- ============ APP ============ -->
 <div id="app">
+  <!-- DESTELLOS DORADOS ABUNDANTES EN EL FONDO GENERAL -->
+  <div class="gold-sparks" id="appGoldSparks"></div>
+
   <header class="nav">
     <div class="nav-inner">
+      <!-- Logo Phenta con la Estrella de 5 Puntas (CORREGIDA CON TODOS LOS TRAZOS Y SU GRADIENTE) -->
       <div class="logo" onclick="goToLanding()" title="Volver al inicio">
-        <svg viewBox="0 0 24 24"><path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z"/></svg>
+        <span class="logo-star-icon">
+          <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="champagneGradNav" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f3e7c4"/>
+                <stop offset="50%" stop-color="#e6d39a"/>
+                <stop offset="100%" stop-color="#cbb279"/>
+              </linearGradient>
+            </defs>
+            <path d="M130 18 L133 30 L145 33 L133 36 L130 48 L127 36 L115 33 L127 30 Z" fill="url(#champagneGradNav)"/>
+            <path d="M152 42 L154 50 L162 52 L154 54 L152 62 L150 54 L142 52 L150 50 Z" fill="url(#champagneGradNav)"/>
+            <path d="M68 128 L70 136 L78 138 L70 140 L68 148 L66 140 L58 138 L66 136 Z" fill="url(#champagneGradNav)"/>
+            <path d="M112 152 L114 160 L122 162 L114 164 L112 172 L110 164 L102 162 L110 160 Z" fill="url(#champagneGradNav)"/>
+            <path d="M100 12 L119 68 L176 68 L130 102 L148 158 L100 123 L52 158 L70 102 L24 68 L81 68 Z" fill="none" stroke="url(#champagneGradNav)" stroke-width="12" stroke-linejoin="round"/>
+            <path d="M38 120 C 18 160, 110 178, 162 122 C 180 102, 168 76, 148 76" fill="none" stroke="url(#champagneGradNav)" stroke-width="10" stroke-linecap="round"/>
+          </svg>
+        </span>
         Phenta
       </div>
       <nav class="links" id="navLinks">
@@ -366,32 +456,46 @@
     <!-- INICIO -->
     <section id="inicio" class="active">
       <p class="kicker">Bienvenido</p>
-      <h2 class="title">Bienvenido a Phenta</h2>
-      <p class="lede">Tu plataforma de entretenimiento interactivo y desarrollo.</p>
+      <h2 class="title">Plataforma de Entretenimiento</h2>
+      <p class="lede">Explora nuestros títulos interactivos inspirados en grandes obras de la literatura universal.</p>
+      
+      <!-- BANNER CON EFECTO AZUL COMPLETO + ZOOM Y BRILLO -->
+      <div class="hero-banner" onmouseenter="setBlueTheme(true)" onmouseleave="setBlueTheme(false)">
+        <div>
+          <span class="hero-tag">PROYECTO DESTACADO</span>
+          <h3>Descensus — La Divina Comedia</h3>
+          <p>Sumérgete en una aventura narrativa profunda a través de los círculos infernales con un apartado artístico deslumbrante.</p>
+          <button class="btn-primary" onclick="showSection('juegos')">EXPLORAR PROYECTO →</button>
+        </div>
+        <div class="hero-image-preview">
+          <div class="hero-image-overlay"></div>
+        </div>
+      </div>
+
       <div class="grid cols-3">
         <button class="card" onclick="showSection('juegos')">
           <div class="icon">
             <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H9v2H7v-2H5v-2h2V9h2v2h2v2zm4.5 1c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5S17.67 9 18.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
           </div>
-          <h3>Explorar Juegos</h3>
-          <p>Descubre nuestro catálogo de experiencias interactivas.</p>
-          <span class="action">Explorar →</span>
+          <h3>Catálogo de Juegos</h3>
+          <p>Descubre nuestras obras principales y futuros títulos interactivos.</p>
+          <span class="action">Explorar catálogo →</span>
         </button>
         <button class="card" onclick="showSection('nosotros')">
           <div class="icon">
             <svg viewBox="0 0 24 24"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg>
           </div>
-          <h3>Área de Desarrolladores</h3>
-          <p>Conoce al equipo y la visión detrás de Phenta.</p>
-          <span class="action">Entrar →</span>
+          <h3>Equipo de Desarrollo</h3>
+          <p>Conoce al talento, la visión y la filosofía detrás del estudio.</p>
+          <span class="action">Conocer equipo →</span>
         </button>
         <button class="card" onclick="showSection('entretenimiento')">
           <div class="icon">
             <svg viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>
           </div>
-          <h3>Contenido Multimedia</h3>
-          <p>Accede a videos, avances y material exclusivo.</p>
-          <span class="action">Ver →</span>
+          <h3>Galerías y Multimedia</h3>
+          <p>Disfruta de trailers, bocetos de arte conceptual y avances exclusivos.</p>
+          <span class="action">Ver contenido →</span>
         </button>
       </div>
     </section>
@@ -399,12 +503,12 @@
     <!-- JUEGOS -->
     <section id="juegos">
       <p class="kicker">Catálogo</p>
-      <h2 class="title">Juegos</h2>
-      <p class="lede">Explora nuestras experiencias.</p>
+      <h2 class="title">Nuestros Juegos</h2>
+      <p class="lede">Experiencias donde la narrativa clásica cobra vida.</p>
       <div class="grid cols-2">
-        <article class="card card-descensus">
+        <article class="card card-descensus" onmouseenter="setBlueTheme(true)" onmouseleave="setBlueTheme(false)">
           <div class="card-image">
-            <img src="descensus-hero.jpg" alt="Descensus — aventura inspirada en La Divina Comedia" loading="lazy" />
+            <img src="descensus-hero.jpg" alt="Descensus" loading="lazy" />
             <div class="card-image-overlay"></div>
           </div>
           <div class="card-body">
@@ -412,7 +516,7 @@
               <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H9v2H7v-2H5v-2h2V9h2v2h2v2zm4.5 1c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5S17.67 9 18.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
             </div>
             <h3>Descensus</h3>
-            <p>Aventura narrativa e inmersiva inspirada en La Divina Comedia.</p>
+            <p>Una travesía interactiva e inmersiva inspirada en La Divina Comedia de Dante Alighieri.</p>
             <span class="action">Jugar ahora →</span>
           </div>
         </article>
@@ -420,11 +524,11 @@
           <div class="icon">
             <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
           </div>
-          <h3>Próximamente</h3>
-          <p>Nuevos títulos inspirados en grandes obras universales en desarrollo.</p>
+          <h3>Próximo Proyecto</h3>
+          <p>Nuevos títulos inspirados en la literatura universal en fase de conceptualización.</p>
           <span class="locked">
             <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-            Bloqueado
+            En Desarrollo
           </span>
         </div>
       </div>
@@ -433,31 +537,31 @@
     <!-- ENTRETENIMIENTO -->
     <section id="entretenimiento">
       <p class="kicker">Contenido</p>
-      <h2 class="title">Entretenimiento</h2>
-      <p class="lede">Contenido exclusivo de nuestros proyectos.</p>
+      <h2 class="title">Galería Multimedia</h2>
+      <p class="lede">Echa un vistazo tras bambalinas a nuestra creación artística.</p>
       <div class="grid cols-3">
-        <div class="card">
+        <div class="card" onmouseenter="setBlueTheme(true)" onmouseleave="setBlueTheme(false)">
           <div class="icon">
             <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
           </div>
           <h3>Trailer Descensus</h3>
-          <p>Mira el avance oficial de nuestro primer gran lanzamiento.</p>
+          <p>Disfruta del avance cinemático de nuestro proyecto principal.</p>
           <span class="action">Ver trailer →</span>
         </div>
         <div class="card">
           <div class="icon">
             <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.22 19.57 10.57 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
           </div>
-          <h3>Galería Conceptual</h3>
-          <p>Explora bocetos, arte visual y modelados de escenarios.</p>
+          <h3>Arte Conceptual</h3>
+          <p>Bocetos de personajes, modelados 3D y diseño de escenarios.</p>
           <span class="action">Ver galería →</span>
         </div>
         <div class="card">
           <div class="icon">
             <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
           </div>
-          <h3>Próximamente</h3>
-          <p>Series interactivas y material narrativo adicional.</p>
+          <h3>Contenido Exclusivo</h3>
+          <p>Entrevistas y diarios de desarrollo para la comunidad.</p>
           <span class="locked">
             <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
             Bloqueado
@@ -469,8 +573,8 @@
     <!-- NOSOTROS -->
     <section id="nosotros">
       <p class="kicker">Quiénes somos</p>
-      <h2 class="title">Nosotros</h2>
-      <div class="pillars" style="margin-top:40px">
+      <h2 class="title">Sobre Phenta</h2>
+      <div class="pillars" style="margin-top:36px">
         <div class="card">
           <h3>Misión</h3>
           <p>Crear soluciones tecnológicas innovadoras que transformen la forma en que las personas aprenden y acceden al conocimiento integrando educación y entretenimiento.</p>
@@ -481,7 +585,7 @@
         </div>
       </div>
       <div class="values">
-        <h3>Valores</h3>
+        <h3>Nuestros Valores</h3>
         <div class="tags">
           <span class="tag">Compañerismo</span>
           <span class="tag">Actitud positiva</span>
@@ -494,13 +598,13 @@
       <div class="team">
         <h3>
           <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-          Nuestro equipo
+          Nuestro Equipo
         </h3>
         <div class="team-grid">
           <div class="team-card"><div class="rol">Fundadores</div><div class="nombres">Geraldine Castaño, Emanuel Celis, Sofia Fernandez, Valentina Martinez, Valentina Vidal</div></div>
           <div class="team-card"><div class="rol">Diseñadores</div><div class="nombres">Sofia Fernandez, Valentina Martinez</div></div>
           <div class="team-card"><div class="rol">Programadores</div><div class="nombres">Emanuel Celis, Valentina Vidal</div></div>
-          <div class="team-card"><div class="rol">Arte y desarrollo</div><div class="nombres">Geraldine Castaño, Sofia Fernandez, Valentina Martinez</div></div>
+          <div class="team-card"><div class="rol">Arte y Desarrollo</div><div class="nombres">Geraldine Castaño, Sofia Fernandez, Valentina Martinez</div></div>
         </div>
         <p class="quote">"¡Que tu edad no sea barrera, sino la puerta que nos une a todos!"</p>
       </div>
@@ -509,24 +613,24 @@
     <!-- NOTICIAS -->
     <section id="noticias">
       <p class="kicker">Actualidad</p>
-      <h2 class="title">Noticias</h2>
+      <h2 class="title">Novedades</h2>
       <div class="card" style="margin-top:32px">
-        <h3>Próximamente</h3>
-        <p>Estamos preparando novedades y anuncios importantes sobre nuestros proyectos.</p>
+        <h3>Anuncios Próximamente</h3>
+        <p>Estamos preparando importantes noticias y lanzamientos. Mantente al tanto de nuestros canales oficiales.</p>
       </div>
     </section>
 
     <!-- AYUDA -->
     <section id="ayuda">
       <p class="kicker">Soporte</p>
-      <h2 class="title">Ayuda</h2>
-      <p class="lede">¿Tienes preguntas o deseas colaborar? Estamos para ayudarte.</p>
+      <h2 class="title">Contacto y Ayuda</h2>
+      <p class="lede">¿Tienes alguna pregunta o propuesta? Escríbenos directamente.</p>
       <a class="contact" href="mailto:phentagames@gmail.com" style="margin-top:32px">
         <div class="icon">
           <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
         </div>
         <div>
-          <div class="label">Contacto</div>
+          <div class="label">Correo Oficial</div>
           <div class="email">phentagames@gmail.com</div>
         </div>
       </a>
@@ -535,16 +639,35 @@
 
   <footer>
     <div class="foot-inner">
-      <div style="font-family:'Great Vibes',cursive;font-size:22px;color:var(--champagne)">✦ Phenta</div>
+      <div style="font-family:'Great Vibes',cursive;font-size:24px;color:var(--champagne)">✦ Phenta</div>
       <div>© Phenta. Todos los derechos reservados.</div>
     </div>
   </footer>
 </div>
 
 <script>
+  // Función para poblar un contenedor con chispas doradas flotantes
+  function createSparks(containerId, count) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    for(let i = 0; i < count; i++) {
+      const spark = document.createElement('div');
+      spark.className = 'gold-spark';
+      spark.style.top = (Math.random() * 100) + '%';
+      spark.style.left = (Math.random() * 100) + '%';
+      const size = Math.random() * 3.5 + 2;
+      spark.style.width = size + 'px';
+      spark.style.height = size + 'px';
+      spark.style.animationDuration = (Math.random() * 3 + 2.5) + 's';
+      spark.style.animationDelay = (Math.random() * 3) + 's';
+      container.appendChild(spark);
+    }
+  }
+
+  // Inicializar estrellas y destellos
   (function(){
     const c = document.getElementById('stars');
-    for(let i=0;i<50;i++){
+    for(let i = 0; i < 50; i++){
       const s = document.createElement('span');
       s.style.top = (Math.random()*100)+'%';
       s.style.left = (Math.random()*100)+'%';
@@ -555,20 +678,41 @@
       c.appendChild(s);
     }
 
-    const g = document.getElementById('goldSparks');
-    for(let i=0;i<25;i++){
-      const spark = document.createElement('div');
-      spark.className = 'gold-spark';
-      spark.style.top = (Math.random()*100)+'%';
-      spark.style.left = (Math.random()*100)+'%';
-      const sz = Math.random()*4+2;
-      spark.style.width = sz+'px';
-      spark.style.height = sz+'px';
-      spark.style.animationDuration = (Math.random()*3+2)+'s';
-      spark.style.animationDelay = (Math.random()*3)+'s';
-      g.appendChild(spark);
-    }
+    createSparks('goldSparks', 25);
+    createSparks('appGoldSparks', 45); // Se aumentó el número de brillos dorados en el fondo general
   })();
+
+  // Estela de brillos dorados al deslizar el cursor
+  let lastSparkTime = 0;
+  document.getElementById('app').addEventListener('mousemove', function(e){
+    const now = Date.now();
+    if(now - lastSparkTime > 60) {
+      lastSparkTime = now;
+      const spark = document.createElement('div');
+      spark.className = 'cursor-spark';
+      spark.style.left = e.clientX + 'px';
+      spark.style.top = e.clientY + 'px';
+      
+      const size = Math.random() * 6 + 4;
+      spark.style.width = size + 'px';
+      spark.style.height = size + 'px';
+
+      document.body.appendChild(spark);
+
+      setTimeout(() => {
+        spark.remove();
+      }, 700);
+    }
+  });
+
+  // Activa o desactiva la atmósfera azul global
+  function setBlueTheme(enable) {
+    if(enable) {
+      document.body.classList.add('theme-blue');
+    } else {
+      document.body.classList.remove('theme-blue');
+    }
+  }
 
   function enterApp(){
     const landing = document.getElementById('landing');
@@ -601,7 +745,6 @@
   }
 
   function showSection(id, btn){
-    const sections = document.querySelectorAll('main > section');
     const targetSection = document.getElementById(id);
     const activeSection = document.querySelector('main > section.active');
 
