@@ -165,7 +165,7 @@
     cursor:pointer;user-select:none;transition:all 0.3s ease;
   }
   .logo:hover{transform:scale(1.03);filter:drop-shadow(0 0 12px rgba(230,211,154,0.6))}
-  .logo-star-icon{width:32px;height:32px;display:inline-block;filter:drop-shadow(0 0 8px rgba(230,211,154,0.4))}
+  .logo-star-icon{width:28px;height:28px;display:inline-block;filter:drop-shadow(0 0 8px rgba(230,211,154,0.4))}
   .logo-star-icon svg{width:100%;height:100%}
 
   nav.links{display:flex;gap:8px;flex-wrap:wrap}
@@ -419,23 +419,13 @@
 
   <header class="nav">
     <div class="nav-inner">
-      <!-- Logo Phenta con la Estrella de 5 Puntas (CORREGIDA CON TODOS LOS TRAZOS Y SU GRADIENTE) -->
+      <!-- Logo Phenta con la Estrella de 5 Puntas -->
       <div class="logo" onclick="goToLanding()" title="Volver al inicio">
         <span class="logo-star-icon">
           <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="champagneGradNav" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#f3e7c4"/>
-                <stop offset="50%" stop-color="#e6d39a"/>
-                <stop offset="100%" stop-color="#cbb279"/>
-              </linearGradient>
-            </defs>
-            <path d="M130 18 L133 30 L145 33 L133 36 L130 48 L127 36 L115 33 L127 30 Z" fill="url(#champagneGradNav)"/>
-            <path d="M152 42 L154 50 L162 52 L154 54 L152 62 L150 54 L142 52 L150 50 Z" fill="url(#champagneGradNav)"/>
-            <path d="M68 128 L70 136 L78 138 L70 140 L68 148 L66 140 L58 138 L66 136 Z" fill="url(#champagneGradNav)"/>
-            <path d="M112 152 L114 160 L122 162 L114 164 L112 172 L110 164 L102 162 L110 160 Z" fill="url(#champagneGradNav)"/>
-            <path d="M100 12 L119 68 L176 68 L130 102 L148 158 L100 123 L52 158 L70 102 L24 68 L81 68 Z" fill="none" stroke="url(#champagneGradNav)" stroke-width="12" stroke-linejoin="round"/>
-            <path d="M38 120 C 18 160, 110 178, 162 122 C 180 102, 168 76, 148 76" fill="none" stroke="url(#champagneGradNav)" stroke-width="10" stroke-linecap="round"/>
+            <path d="M130 18 L133 30 L145 33 L133 36 L130 48 L127 36 L115 33 L127 30 Z" fill="url(#champagneGrad)"/>
+            <path d="M100 12 L119 68 L176 68 L130 102 L148 158 L100 123 L52 158 L70 102 L24 68 L81 68 Z" fill="none" stroke="url(#champagneGrad)" stroke-width="12" stroke-linejoin="round"/>
+            <path d="M38 120 C 18 160, 110 178, 162 122 C 180 102, 168 76, 148 76" fill="none" stroke="url(#champagneGrad)" stroke-width="10" stroke-linecap="round"/>
           </svg>
         </span>
         Phenta
